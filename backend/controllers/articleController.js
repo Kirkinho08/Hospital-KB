@@ -1,7 +1,17 @@
 const Article = require("../models/Article");
 
 exports.getArticles = async (req, res) => {
-  const articles = await Article.find().sort({ createdAt: -1 });
+  const search = req.query.search || "";
+  let query = {};
+
+  if (search) {
+    const regex = new RegExp(search, "i"); // Case-insensitive search
+    query = {
+      $or: [{ title: regex }, { content: regex }, { category: regex }],
+    };
+  }
+
+  const articles = await Article.find(query).sort({ createdAt: -1 });
   res.json(articles);
 };
 
