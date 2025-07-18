@@ -36,3 +36,19 @@ exports.deleteArticle = async (req, res) => {
   }
   res.json({ message: "Article deleted successfully" });
 };
+
+exports.updateArticle = async (req, res) => {
+  const { title, content, category } = req.body;
+  try {
+    const article = await Article.findByIdAndUpdate(
+      req.params.id,
+      { title, content, category },
+      { new: true }
+    );
+
+    if (article) res.json(article);
+    else res.status(404).json({ message: "Article not found" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating article" });
+  }
+};
