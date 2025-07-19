@@ -6,7 +6,8 @@ build/
 dist/   
 
 # Environment variables
-.env
+/frontend/.env
+/backend/.env
 
 # System files
 .DS_Store
