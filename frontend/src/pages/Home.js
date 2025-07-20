@@ -7,6 +7,13 @@ function Home() {
   const [articles, setArticles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [bookmarked, setBookmarked] = useState([]);
+
+  // Load bookmarks from localStorage on first render
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("bookmarkedArticles")) || [];
+    setBookmarked(saved);
+  }, []);
 
   // Fetch articles on page load
   useEffect(() => {
@@ -16,7 +23,19 @@ function Home() {
       .catch((err) => console.error(err));
   }, []);
 
-  // Extract unique categories from the articles
+  // Handle bookmark toggle
+  const toggleBookmark = (id) => {
+    let updated;
+    if (bookmarked.includes(id)) {
+      updated = bookmarked.filter((bid) => bid !== id);
+    } else {
+      updated = [...bookmarked, id];
+    }
+    setBookmarked(updated);
+    localStorage.setItem("bookmarkedArticles", JSON.stringify(updated));
+  };
+
+  // Extract unique categories
   const categories = [
     "All",
     ...new Set(
@@ -24,7 +43,7 @@ function Home() {
     ),
   ];
 
-  // Filter based on category and search
+  // Filter based on search + category
   const filteredArticles = articles.filter((article) => {
     const matchesCategory =
       selectedCategory === "All" || article.category === selectedCategory;
@@ -37,6 +56,9 @@ function Home() {
 
     return matchesCategory && matchesSearch;
   });
+
+  // Get bookmarked articles (for top section)
+  const bookmarkedArticles = articles.filter((a) => bookmarked.includes(a._id));
 
   return (
     <div>
@@ -73,12 +95,45 @@ function Home() {
 
         {/* 📚 Article List */}
         <div className="col-md-8">
+          {bookmarkedArticles.length > 0 && (
+            <div className="mb-4">
+              <h5 className="text-warning">⭐ Bookmarked Articles</h5>
+              <ul className="list-group mb-3">
+                {bookmarkedArticles.map((article) => (
+                  <li
+                    key={article._id}
+                    className="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <Link to={`/article/${article._id}`}>{article.title}</Link>
+                    <button
+                      className="btn btn-sm btn-outline-secondary"
+                      onClick={() => toggleBookmark(article._id)}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <h5 className="text-secondary mb-3">{selectedCategory} Articles</h5>
           {filteredArticles.map((article) => (
             <div className="card mb-3 shadow-sm border-0" key={article._id}>
               <div className="card-body">
-                <h5 className="card-title">{article.title}</h5>
-                <p className="card-text">{getPreview(article.content, 100)}</p>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="card-title mb-0">{article.title}</h5>
+                  <button
+                    className="btn btn-sm fs-4"
+                    onClick={() => toggleBookmark(article._id)}
+                    title="Bookmark"
+                  >
+                    {bookmarked.includes(article._id) ? "★" : "☆"}
+                  </button>
+                </div>
+                <p className="card-text mt-2">
+                  {getPreview(article.content, 100)}
+                </p>
                 <Link
                   to={`/article/${article._id}`}
                   className="btn btn-primary"

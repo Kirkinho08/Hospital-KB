@@ -5,7 +5,7 @@ import ThemeToggle from "./ThemeToggle";
 function Navbar() {
   return (
     <nav
-      className="navbar navbar-expand-lg py-2"
+      className="navbar navbar-expand-lg"
       style={{ backgroundColor: "#003865" }}
     >
       <div className="container-fluid flex-column align-items-center text-center">
@@ -17,7 +17,6 @@ function Navbar() {
         </div>
 
         {/* Title */}
-        <h4 className="text-white mt-1 mb-0">SGHS Knowledge Base</h4>
 
         {/* Nav Links Below Title */}
         <div className="d-flex justify-content-center">
