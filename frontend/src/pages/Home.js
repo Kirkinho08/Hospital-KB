@@ -39,7 +39,7 @@ function Home() {
 
   return (
     <div>
-      <h1 className="mb-4">Knowledge Base</h1>
+      <h1 className="text-primary mb-4">Knowledge Base</h1>
 
       {/* 🔍 Search Bar */}
       <input
@@ -53,7 +53,7 @@ function Home() {
       <div className="row">
         {/* 📁 Category Filter */}
         <div className="col-md-4">
-          <h5>Categories</h5>
+          <h5 className="text-secondary">Categories</h5>
           <ul className="list-group">
             {categories.map((cat) => (
               <li
@@ -72,9 +72,9 @@ function Home() {
 
         {/* 📚 Article List */}
         <div className="col-md-8">
-          <h5>{selectedCategory} Articles</h5>
+          <h5 className="text-secondary mb-3">{selectedCategory} Articles</h5>
           {filteredArticles.map((article) => (
-            <div className="card mb-3" key={article._id}>
+            <div className="card mb-3 shadow-sm border-0" key={article._id}>
               <div className="card-body">
                 <h5 className="card-title">{article.title}</h5>
                 <p className="card-text">

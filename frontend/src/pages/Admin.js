@@ -77,9 +77,9 @@ function Admin() {
 
   return (
     <div>
-      <h2>Admin Panel</h2>
+      <h2 className="mb-4 text-primary">Admin Panel</h2>
 
-      <div className="mb-4">
+      <div className="mb-4 p-3 bg-light rounded shadow-sm">
         <input
           type="text"
           className="form-control mb-2"
@@ -129,8 +129,8 @@ function Admin() {
         </div>
       </div>
 
-      <h4>Existing Articles</h4>
-      <ul className="list-group">
+      <h4 className="mt-5 mb-3 text-secondary">Existing Articles</h4>
+      <ul className="list-group shadow-sm">
         {articles.map((article) => (
           <li
             key={article._id}
