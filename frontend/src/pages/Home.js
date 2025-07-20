@@ -40,7 +40,7 @@ function Home() {
 
   return (
     <div>
-      <h1 className="text-primary mb-4">Knowledge Base</h1>
+      <h2 className="text-primary mb-4">Knowledge Base</h2>
 
       {/* 🔍 Search Bar */}
       <input
