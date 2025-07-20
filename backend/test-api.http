@@ -1,0 +1,18 @@
+### Get all articles
+GET http://localhost:5000/api/articles
+
+### Create an article
+POST http://localhost:5000/api/articles
+Content-Type: application/json
+
+{
+  "title": "Test from REST Client",
+  "content": "No Postman, no problem!",
+  "category": "Testing"
+}
+
+### Get article by ID
+GET http://localhost:5000/api/articles/YOUR_ID_HERE
+
+### Delete article
+DELETE http://localhost:5000/api/articles/YOUR_ID_HERE
