@@ -29,11 +29,15 @@ function Admin() {
 
   useEffect(() => {
     fetchArticles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
   const fetchArticles = async () => {
     try {
-      const res = await axios.get("/api/articles");
+      const res = await axios.get(`${API_BASE_URL}/api/articles`);
       setArticles(res.data);
     } catch (err) {
       console.error("Failed to fetch articles", err);
@@ -46,16 +50,19 @@ function Admin() {
 
     try {
       if (editingId) {
-        const res = await axios.put(`/api/articles/${editingId}`, {
-          title,
-          content,
-          category,
-        });
+        const res = await axios.put(
+          `${API_BASE_URL}/api/articles/${editingId}`,
+          {
+            title,
+            content,
+            category,
+          }
+        );
         setArticles((prev) =>
           prev.map((a) => (a._id === editingId ? res.data : a))
         );
       } else {
-        const res = await axios.post("/api/articles", {
+        const res = await axios.post(`${API_BASE_URL}/api/articles`, {
           title,
           content,
           category,
@@ -136,6 +143,7 @@ function Admin() {
           }}
         />
 
+        {/* Ensure the editor is initialized before using it */}
         <div className="d-flex gap-2 mt-3">
           <button className="btn btn-success" onClick={handleSubmit}>
             {editingId ? "Update Article" : "Add Article"}

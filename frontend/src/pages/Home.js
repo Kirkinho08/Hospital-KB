@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { getPreview } from "../utility/text";
 
 function Home() {
   const [articles, setArticles] = useState([]);
@@ -77,11 +78,7 @@ function Home() {
             <div className="card mb-3 shadow-sm border-0" key={article._id}>
               <div className="card-body">
                 <h5 className="card-title">{article.title}</h5>
-                <p className="card-text">
-                  {article.content.length > 100
-                    ? article.content.slice(0, 100) + "..."
-                    : article.content}
-                </p>
+                <p className="card-text">{getPreview(article.content, 100)}</p>
                 <Link
                   to={`/article/${article._id}`}
                   className="btn btn-primary"
