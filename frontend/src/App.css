@@ -1,0 +1,43 @@
+/* Light Theme (default) */
+body {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.navbar {
+  background-color: #003865;
+}
+
+.dark-mode {
+  background-color: #121212;
+  color: #f1f1f1;
+}
+
+.dark-mode .navbar {
+  background-color: #1c1c1c;
+}
+
+.dark-mode .nav-link {
+  color: #f1f1f1 !important;
+}
+
+.dark-mode .tox-tinymce {
+  background-color: #2b2b2b !important;
+}
+
+.dark-mode .tox-edit-area__iframe {
+  background-color: #2b2b2b !important;
+}
+
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select {
+  background-color: #2b2b2b;
+  color: #f1f1f1;
+  border: 1px solid #555;
+}
+
+.dark-mode input::placeholder,
+.dark-mode textarea::placeholder {
+  color: #aaaaaa;
+}
