@@ -8,7 +8,24 @@ function Admin() {
   const [category, setCategory] = useState("");
   const [editingId, setEditingId] = useState(null);
   const editorRef = useRef(null);
-  const apiKey = process.env.REACT_APP_API_KEY;
+
+  const [darkMode, setDarkmode] = useState(
+    document.body.classList.contains("dark-mode")
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setDarkmode(document.body.classList.contains("dark-mode"));
+    });
+
+    observer.observe(document.body, { attributes: true });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const apiKey = process.env.REACT_APP_TINYMCE_API_KEY || "no-api-key";
 
   useEffect(() => {
     fetchArticles();
@@ -102,7 +119,7 @@ function Admin() {
           initialValue=""
           init={{
             height: 300,
-            menubar: false,
+            menubar: true,
             plugins: [
               "advlist autolink lists link image charmap preview anchor",
               "searchreplace visualblocks code fullscreen",
@@ -112,6 +129,8 @@ function Admin() {
               "undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code",
             content_style:
               "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+            skin: darkMode ? "oxide-dark" : "oxide",
+            content_css: darkMode ? "dark" : "default",
             automatic_uploads: true,
             images_upload_url: "http://localhost:5000/api/upload",
           }}
