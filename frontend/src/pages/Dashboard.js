@@ -22,7 +22,7 @@ function Dashboard() {
 
   return (
     <div className="container">
-      <h2 className="mb-4">Admin Dashboard</h2>
+      <h2 className="mb-4 text-primary">Dashboard</h2>
 
       <div className="row mb-4">
         <div className="col-md-4">

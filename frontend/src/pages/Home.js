@@ -131,6 +131,23 @@ function Home() {
                     {bookmarked.includes(article._id) ? "★" : "☆"}
                   </button>
                 </div>
+                {/* Tags */}
+                {article.tags && article.tags.length > 0 && (
+                  <div className="mt-2">
+                    {article.tags.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="badge bg-secondary me-2"
+                        onClick={() => setSearchTerm(tag)}
+                        style={{ cursor: "pointer" }}
+                        title={`Filter by tag: ${tag}`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 <p className="card-text mt-2">
                   {getPreview(article.content, 100)}
                 </p>

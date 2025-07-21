@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Editor } from "@tinymce/tinymce-react";
 
@@ -6,6 +6,7 @@ function Admin() {
   const [articles, setArticles] = useState([]);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [tags, setTags] = useState(""); // ✅ NEW: Tag input as comma-separated string
   const [editingId, setEditingId] = useState(null);
   const editorRef = useRef(null);
 
@@ -17,36 +18,36 @@ function Admin() {
     const observer = new MutationObserver(() => {
       setDarkmode(document.body.classList.contains("dark-mode"));
     });
-
     observer.observe(document.body, { attributes: true });
-
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   const apiKey = process.env.REACT_APP_TINYMCE_API_KEY || "no-api-key";
-
-  useEffect(() => {
-    fetchArticles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
-  const fetchArticles = async () => {
+  // Fetch articles from API
+  const fetchArticles = useCallback(async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/articles`);
       setArticles(res.data);
     } catch (err) {
       console.error("Failed to fetch articles", err);
     }
-  };
-
+  }, [API_BASE_URL]);
+  // Fetch articles on mount
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
+  // Handle form submission for adding/editing articles
   const handleSubmit = async () => {
     const content = editorRef.current?.getContent() || "";
     if (!title.trim()) return;
+
+    const tagArray = tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t !== "");
 
     try {
       if (editingId) {
@@ -56,6 +57,7 @@ function Admin() {
             title,
             content,
             category,
+            tags: tagArray, // ✅ Send tags
           }
         );
         setArticles((prev) =>
@@ -66,6 +68,7 @@ function Admin() {
           title,
           content,
           category,
+          tags: tagArray, // ✅ Send tags
         });
         setArticles([res.data, ...articles]);
       }
@@ -77,7 +80,7 @@ function Admin() {
 
   const deleteArticle = async (id) => {
     try {
-      await axios.delete(`/api/articles/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/articles/${id}`);
       setArticles((prev) => prev.filter((a) => a._id !== id));
       if (editingId === id) clearForm();
     } catch (err) {
@@ -88,6 +91,7 @@ function Admin() {
   const startEditing = (article) => {
     setTitle(article.title);
     setCategory(article.category || "");
+    setTags((article.tags || []).join(", ")); // ✅ Load tags into input
     editorRef.current?.setContent(article.content || "");
     setEditingId(article._id);
   };
@@ -95,6 +99,7 @@ function Admin() {
   const clearForm = () => {
     setTitle("");
     setCategory("");
+    setTags(""); // ✅ Clear tags
     editorRef.current?.setContent("");
     setEditingId(null);
   };
@@ -120,6 +125,15 @@ function Admin() {
           onChange={(e) => setCategory(e.target.value)}
         />
 
+        {/* ✅ NEW TAG INPUT */}
+        <input
+          type="text"
+          className="form-control mb-2"
+          placeholder="Tags (comma separated, e.g., printers, wifi)"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+        />
+
         <Editor
           apiKey={apiKey}
           onInit={(_evt, editor) => (editorRef.current = editor)}
@@ -143,7 +157,6 @@ function Admin() {
           }}
         />
 
-        {/* Ensure the editor is initialized before using it */}
         <div className="d-flex gap-2 mt-3">
           <button className="btn btn-success" onClick={handleSubmit}>
             {editingId ? "Update Article" : "Add Article"}

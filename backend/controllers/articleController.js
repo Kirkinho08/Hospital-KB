@@ -7,7 +7,12 @@ exports.getArticles = async (req, res) => {
   if (search) {
     const regex = new RegExp(search, "i"); // Case-insensitive search
     query = {
-      $or: [{ title: regex }, { content: regex }, { category: regex }],
+      $or: [
+        { title: regex },
+        { content: regex },
+        { category: regex },
+        { tags: regex },
+      ],
     };
   }
 
@@ -42,12 +47,11 @@ exports.deleteArticle = async (req, res) => {
 };
 
 exports.updateArticle = async (req, res) => {
-  const { title, content, category } = req.body;
+  const { title, content, category, tags } = req.body;
   try {
     const article = await Article.findByIdAndUpdate(
       req.params.id,
-      { title, content, category },
-      { new: true }
+      { title, content, category, tags } // Ensure tags are updated
     );
 
     if (article) res.json(article);
