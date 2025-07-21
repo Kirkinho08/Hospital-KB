@@ -1,4 +1,14 @@
 // src/pages/Dashboard.js
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -19,6 +29,13 @@ function Dashboard() {
     acc[category] = (acc[category] || 0) + 1;
     return acc;
   }, {});
+
+  const categoryChartData = Object.entries(articlesByCategory).map(
+    ([category, count]) => ({
+      name: category,
+      count,
+    })
+  );
 
   const tagCounts = articles.reduce((acc, article) => {
     (article.tags || []).forEach((tag) => {
@@ -87,6 +104,20 @@ function Dashboard() {
           </li>
         ))}
       </ul>
+
+      <h5 className="mt-4">Category Chart</h5>
+      <div style={{ width: "100%", height: 300 }}>
+        <ResponsiveContainer>
+          <BarChart data={categoryChartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis allowDecimals={false} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="count" fill="#0d6efd" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       {/* Articles by Tag */}
       <h4 className="mt-4">Articles by Tag</h4>

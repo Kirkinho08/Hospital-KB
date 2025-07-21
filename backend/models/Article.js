@@ -6,7 +6,8 @@ const ArticleSchema = new mongoose.Schema(
     content: { type: String },
     category: { type: String },
     subcategory: { type: String },
-    tags: { type: [String], default: [] }, // New field for tags
+    tags: { type: [String], default: [] },
+    attachments: { filename: String, url: String },
   },
   { timestamps: true }
 );
