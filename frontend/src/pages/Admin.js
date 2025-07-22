@@ -10,6 +10,7 @@ function Admin() {
   const [editingId, setEditingId] = useState(null);
   const editorRef = useRef(null);
 
+  // Dark mode state
   const [darkMode, setDarkmode] = useState(
     document.body.classList.contains("dark-mode")
   );
