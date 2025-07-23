@@ -91,20 +91,7 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Articles by Category */}
-      <h4 className="mt-4">Articles by Category</h4>
-      <ul className="list-group mb-4">
-        {Object.entries(articlesByCategory).map(([category, count]) => (
-          <li
-            className="list-group-item d-flex justify-content-between"
-            key={category}
-          >
-            <span>{category}</span>
-            <span className="badge bg-secondary rounded-pill">{count}</span>
-          </li>
-        ))}
-      </ul>
-
+      {/* Articles by Category Chart */}
       <h5 className="mt-4">Category Chart</h5>
       <div style={{ width: "100%", height: 300 }}>
         <ResponsiveContainer>
@@ -119,19 +106,24 @@ function Dashboard() {
         </ResponsiveContainer>
       </div>
 
-      {/* Articles by Tag */}
-      <h4 className="mt-4">Articles by Tag</h4>
-      <ul className="list-group mb-4">
-        {Object.entries(tagCounts).map(([tag, count]) => (
-          <li
-            className="list-group-item d-flex justify-content-between"
-            key={tag}
+      <h5 className="mt-4">Tags Chart</h5>
+      <div style={{ width: "100%", height: 300 }}>
+        <ResponsiveContainer>
+          <BarChart
+            data={Object.entries(tagCounts).map(([tag, count]) => ({
+              name: tag,
+              count,
+            }))}
           >
-            <span>{tag}</span>
-            <span className="badge bg-info rounded-pill">{count}</span>
-          </li>
-        ))}
-      </ul>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis allowDecimals={false} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="count" fill="#6610f2" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       {/* Recent Articles */}
       <h4 className="mt-4">Recently Updated</h4>
